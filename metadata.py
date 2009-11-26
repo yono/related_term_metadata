@@ -125,7 +125,7 @@ class MetaData(object):
 
     def regist(self, id):
         cur = self.cur
-        wordslist = self.make(id)
+        wordslist = self.make(id,'all','all')
         sql_list = []
         # 単語辞書を読み込む
         if len(self.words) == 0:
