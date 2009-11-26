@@ -51,7 +51,8 @@ class MetaData(object):
             self.hutil = htmlutil.HTMLUtil()
         worddic = self.hutil.get_analysed_text(html)
         if len(worddic) == 0:
-            if self.htuil_ext = htmlutil_ext.HTMLUtil()
+            if self.htuil_ext == None:
+                self.hutil_ext = htmlutil_ext.HTMLUtil()
             worddic = self.hutil_ext.get_analysed_text(html)
 
         # HTML中の延べ単語数を取得
