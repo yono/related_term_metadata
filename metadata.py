@@ -29,8 +29,8 @@ class MetaData(object):
                 passwd='taberu-syati',use_unicode=True,charset='utf8')
         self.cur = con.cursor()
 
-        self.hutil = htmlutil.HTMLUtil()
-        self.hutil_ext = htmlutil_ext.HTMLUtil()
+        self.hutil = None
+        self.htuil_ext = None
         self.simpson_threshold = 2.0
         self.cosine_threshold = 0.056
         self.DEBUG = DEBUG
@@ -47,8 +47,11 @@ class MetaData(object):
         # HTMLを取得し、単語を抽出する
         cur.execute('select content from note_note where id = %d' % (id))
         html = cur.fetchone()[0].decode('utf-8')
+        if self.htuil is None:
+            self.hutil = htmlutil.HTMLUtil()
         worddic = self.hutil.get_analysed_text(html)
         if len(worddic) == 0:
+            if self.htuil_ext = htmlutil_ext.HTMLUtil()
             worddic = self.hutil_ext.get_analysed_text(html)
 
         # HTML中の延べ単語数を取得
@@ -138,9 +141,9 @@ class MetaData(object):
 
         # マルチプル Insert
         for data in wordslist:
-            for src_word in data[i].src_words:
+            for src_word in data.src_words:
                 sql_list.append("(%d,%d,%f,%d)" %\
-                        (words[data.word],id,data.weight,words[src_word]))
+                (self.words[data.word],id,data.weight,self.words[src_word]))
         sql = """
         INSERT INTO metadata (word_id,note_id,weight,org_id) VALUES %s
         """ % (','.join(sql_list))
