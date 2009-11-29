@@ -15,6 +15,7 @@ import htmlutil
 import htmlutil_ext
 from math import log
 import co_word
+import config
 
 class RelatedWord(object):
     def __init__(self,word,weight,src_words=[]):
@@ -25,12 +26,15 @@ class RelatedWord(object):
 class MetaData(object):
     def __init__(self,DEBUG=False):
         # 初期化
-        con = MySQLdb.connect(db='graduate',host='localhost',user='root',
-                passwd='taberu-syati',use_unicode=True,charset='utf8')
+        dbname = 'graduate'
+        user = config.get_option(dbname,'user')
+        passwd = config.get_option(dbname,'passwd')
+        con = MySQLdb.connect(db=dbname,host='localhost',user=user,
+                passwd=passwd,use_unicode=True,charset='utf8')
         self.cur = con.cursor()
 
-        self.hutil = None
-        self.htuil_ext = None
+        self.hutil = htmlutil.HTMLUtil()
+        self.htuil_ext = htmlutil_ext.HTMLUtil()
         self.simpson_threshold = 2.0
         self.cosine_threshold = 0.056
         self.DEBUG = DEBUG

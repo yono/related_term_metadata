@@ -2,11 +2,15 @@
 # -*- coding:utf-8 -*-
 import re
 import MeCab
+import config
 
 class extractword(object):
     
     def __init__(self):
-        self.mecabtagger = MeCab.Tagger('--userdic=/Users/yono/mecabdic/ontolopedia.dic')
+    	section = 'mecab'
+    	userdic = config.get_option(section,'userdic')
+    	rcfile = config.get_option(section,'rcfile')
+        self.mecab = MeCab.Tagger('--userdic=%s --rcfile=%s' % (userdic,rcfile))
 
     def is_symbol_only(self,word):
         regexp = \
@@ -39,7 +43,7 @@ class extractword(object):
     def extract_noun(self, text):
         worddic = {}
         result = []
-        c = self.mecabtagger
+        c = self.mecab
         res = c.parseToNode(text.encode("utf-8"))
         ignore = set([u'数',u'代名詞',u'非自立',u'記号',u'接頭',u'接尾'])
         while res:

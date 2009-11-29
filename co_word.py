@@ -7,82 +7,17 @@ simpson 係数である単語とそれと共起した単語の類似度を計算
 import sys
 from math import log,sqrt
 import MySQLdb
-import htmlutil
-
-def get_related_word(word1, word2):
-    con = MySQLdb.connect(db='graduate',host='localhost',user='root',\
-            passwd='taberu-syati',use_unicode=True,charset='utf8')
-    cur = con.cursor()
-    
-    cur.execute('select id,df from word where name = "%s"' %\
-            (MySQLdb.escape_string(word1)))
-    row = cur.fetchone()
-    w1id = int(row[0])
-    w1f = int(row[1])
-
-    cur.execute('select id,df from word where name = "%s"' %\
-            (MySQLdb.escape_string(word2)))
-    row = cur.fetchone()
-    w2id = int(row[0])
-    w2f = int(row[1])
-
-    cur.execute('''
-        select c.mi_score from co c, word w1, word w2
-        where c.word1_id = %d and w1.id = c.word1_id and c.word2_id = %d and w2.id = c.word2_id and 
-        w2.df < 10000 and w2.df > 9 and w1.df < 10000 and w2.df > 9
-    ''' % (w1id,w2id))
-    res = cur.fetchone()
-    if res is None:
-        return {'d':0.0,'j':0.0,'s':0.0,'c':0.0}
-    else:
-        mi = float(res[0])
-
-    co = {}
-    cur.execute('''
-        select webpage_id from appear where word_id = %d
-        ''' % (w1id))
-    rows = cur.fetchall()
-    for j in xrange(len(rows)):
-        wid = int(rows[j][0])
-        co[wid] = co.get(wid, 0) + 1
-
-    cur.execute('''
-        select webpage_id from appear where word_id = %d
-        ''' % (w2id))
-    rows = cur.fetchall()
-    for j in xrange(len(rows)):
-        wid = int(rows[j][0])
-        co[wid] = co.get(wid, 0) + 1
-
-    w12freq = 0
-    for j in co:
-        if co[j] == 2:
-            w12freq += 1
-
-    w12 = float(w12freq)/float(w1f)
-    w21 = float(w12freq)/float(w2f)
-    if w12 == 0 or w21 == 0:
-        return {'d':0.0,'j':0.0,'s':0.0,'c':0.0}
-
-    dice = 2*w12freq/float(w1f+w2f)
-    #dice = (w12freq)/float(w12+w21)
-    #jaccard = w12freq/float(len(co))
-    jaccard = w12freq/float(w1f+w2f+len(co))
-    simpson = (w12freq)/float(min(w1f,w2f))
-    cosine  = w12freq/sqrt(w1f*w2f)
-
-    #print 'simpson:',simpson,' dice:',dice,' cosine:',cosine,' jaccard:',jaccard
-    #result = (simpson + cosine + dice + mi)/4.0
-    #result = (simpson + dice) / 2.0
-    result = {'d':dice,'j':jaccard,'s':simpson,'c':cosine}
-
-    return result
+import config
 
 def get_related_words(word):
     word1 = word
 
-    con = MySQLdb.connect(db='graduate',host='localhost',user='root',\
-            passwd='taberu-syati',use_unicode=True,charset='utf8')
+    dbname = 'cooccur'
+    user = config.get_option(dbname,'user')
+    passwd = config.get_option(dbname,'passwd')
+
+    con = MySQLdb.connect(db=dbname,host='localhost',user=user,\
+            passwd=passwd,use_unicode=True,charset='utf8')
     cur = con.cursor()
 
     cur.execute('select id,df from word where name = "%s"' % (word1))
@@ -124,8 +59,6 @@ def get_related_words(word):
     for i in xrange(len(cosines)):
         newresult[cosines[i][0]]['c1'] = i
         newresult[cosines[i][0]]['c2'] = cosines[i][1]
-        #newresult[cosines[i][0]]['c2'] = cosines[i][1]/float(cosines[0][1])
-
 
     newslist = [(k,v) for k,v in news.items() if v > 0.3]
     newslist.sort(lambda x,y:cmp(x[1],y[1]),reverse=True)
@@ -139,6 +72,4 @@ def count_same(rdic1,rdic2):
     return len(set1)
 
 if __name__ == '__main__':
-    word1 = sys.argv[1].decode()
-    word2 = sys.argv[2].decode()
-    print get_related_word(word1,word2)
+    print get_related_word(word1)
