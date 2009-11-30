@@ -11,11 +11,11 @@ cword2: 注目する関連語その2
 """
 import sys
 import MySQLdb
-import htmlutil
-import htmlutil_ext
 from math import log
 import co_word
 import config
+import htmlutil
+import htmlutil_ext
 
 class RelatedWord(object):
     def __init__(self,word,weight,src_words=[]):

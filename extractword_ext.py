@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 import re
-import MeCab
 import config
 
 class extractword(object):
     
     def __init__(self):
+        import MeCab
     	section = 'mecab'
     	userdic = config.get_option(section,'userdic')
     	rcfile = config.get_option(section,'rcfile')

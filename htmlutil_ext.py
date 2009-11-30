@@ -13,13 +13,13 @@ htmlentity2unicode()
 import re
 import htmlentitydefs
 import unicodedata
-import MeCab
-import extractcontent
 import extractword_ext
 
 class HTMLUtil(object):
 
     def __init__(self):
+        import MeCab
+        import extractcontent
         self.mecab = MeCab.Tagger()
         self.tags = ['blockquote','body','caption','center',
                 'dd','div','dl','dt','form','h1','h2','h3','h4','h5','h6',
