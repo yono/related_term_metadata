@@ -34,7 +34,7 @@ class MetaData(object):
         self.cur = con.cursor()
 
         self.hutil = htmlutil.HTMLUtil()
-        self.htuil_ext = htmlutil_ext.HTMLUtil()
+        self.hutil_ext = htmlutil_ext.HTMLUtil()
         self.simpson_threshold = 2.0
         self.cosine_threshold = 0.056
         self.DEBUG = DEBUG
@@ -42,6 +42,7 @@ class MetaData(object):
 
     def make(self,id,cword1,cword2):
         cur = self.cur
+        cur.execute('set names utf8')
         cwords = {} # 注目する関連語
         if cword1 == all and cword2 == all:
             cwords = {'mac':0,'java':0,'javascript':0,'firefox':0}
@@ -51,11 +52,11 @@ class MetaData(object):
         # HTMLを取得し、単語を抽出する
         cur.execute('select content from note_note where id = %d' % (id))
         html = cur.fetchone()[0].decode('utf-8')
-        if self.htuil is None:
+        if self.hutil is None:
             self.hutil = htmlutil.HTMLUtil()
         worddic = self.hutil.get_analysed_text(html)
         if len(worddic) == 0:
-            if self.htuil_ext == None:
+            if self.hutil_ext == None:
                 self.hutil_ext = htmlutil_ext.HTMLUtil()
             worddic = self.hutil_ext.get_analysed_text(html)
 
@@ -68,7 +69,8 @@ class MetaData(object):
         relatedwords = {}
         pagewords = []
         for i in worddic:
-            cur.execute('select idf,df from word where name = "%s"' % (i))
+            cur.execute('select idf,df from word where name = "%s"' %\
+                    (i.encode('utf-8')))
             row = cur.fetchone()
             if row is not None:
                 idf = float(row[0])
@@ -149,10 +151,11 @@ class MetaData(object):
             for src_word in data.src_words:
                 sql_list.append("(%d,%d,%f,%d)" %\
                 (self.words[data.word],id,data.weight,self.words[src_word]))
-        sql = """
-        INSERT INTO metadata (word_id,note_id,weight,org_id) VALUES %s
-        """ % (','.join(sql_list))
-        cur.execute(sql)
+        if len(sql_list) > 0:
+            sql = """
+            INSERT INTO metadata (word_id,note_id,weight,org_id) VALUES %s
+            """ % (','.join(sql_list))
+            cur.execute(sql)
         
 if __name__ == '__main__':
     import sys
