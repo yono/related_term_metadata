@@ -7,10 +7,11 @@ config.py
 各種設定を読み込む
 """
 import os
+from distutils.sysconfig import get_python_lib
 from ConfigParser import SafeConfigParser
 
 parser = SafeConfigParser()
-filepath = os.path.join(os.environ['PYTHONPATH'],'conf.ini')
+filepath = os.path.join(get_python_lib(),'conf.ini')
 parser.readfp(open(filepath))
 
 def get_option(section, opt):

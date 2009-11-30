@@ -33,8 +33,8 @@ class MetaData(object):
                 passwd=passwd,use_unicode=True,charset='utf8')
         self.cur = con.cursor()
 
-        self.hutil = htmlutil.HTMLUtil()
-        self.hutil_ext = htmlutil_ext.HTMLUtil()
+        self.hutil = None
+        self.hutil_ext = None
         self.simpson_threshold = 2.0
         self.cosine_threshold = 0.056
         self.DEBUG = DEBUG
