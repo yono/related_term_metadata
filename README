@@ -6,3 +6,16 @@
 MySQLdb
 MeCab
 extractcontent
+
+インストール方法
+% sudo python setup.py install
+
+conf.ini を編集する
+
+[graduate] # 卒研ノートで使ってるDB
+[cooccur] # 共起情報が入ってるDB
+[mecab] # MeCab のユーザー辞書とか設定ファイルの位置とか
+[django] # 卒研ノートのテンプレートの場所とかURLとか
+
+% python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()"
+を実行して，表示されたディレクトリに conf.ini を cp する
