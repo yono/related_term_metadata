@@ -1,6 +1,7 @@
 2009/11/25
 卒研ノートで関連度検索に関する処理（メタデータ生成、検索など）を
 行っているモジュールの集合です。
+# インストールしなくても卒研ノート自体は動きます
 
 依存しているモジュール
 MySQLdb
@@ -15,7 +16,6 @@ conf.ini を編集する
 [graduate] # 卒研ノートで使ってるDB
 [cooccur] # 共起情報が入ってるDB
 [mecab] # MeCab のユーザー辞書とか設定ファイルの位置とか
-[django] # 卒研ノートのテンプレートの場所とかURLとか
 
 % python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()"
 を実行して，表示されたディレクトリに conf.ini を cp する

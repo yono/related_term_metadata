@@ -2,11 +2,11 @@
 # -*- coding:utf-8 -*-
 import re
 import config
+import MeCab
 
 class extractword(object):
     
     def __init__(self):
-        import MeCab
     	section = 'mecab'
     	userdic = config.get_option(section,'userdic')
     	rcfile = config.get_option(section,'rcfile')
