@@ -10,7 +10,8 @@ class extractword(object):
     	section = 'mecab'
     	userdic = config.get_option(section,'userdic')
     	rcfile = config.get_option(section,'rcfile')
-        self.mecab = MeCab.Tagger('--userdic=%s --rcfile=%s' % (userdic,rcfile))
+        #self.mecab = MeCab.Tagger('--userdic=%s --rcfile=%s' % (userdic,rcfile))
+        self.mecab = MeCab.Tagger()
 
     def is_symbol_only(self,word):
         u = unicode
