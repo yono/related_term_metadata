@@ -91,6 +91,16 @@ class HTMLUtil(object):
 
         return result
 
+    def remove_htmltag(self, html):
+        result = self.remove_useless_text(html)
+        all_tag = re.compile(r'(?is)<.*?>')
+        symbol = re.compile(self.symbols, re.I | re.S)
+        result = all_tag.sub(" ", result)
+        result = symbol.sub(" ",result)
+        spaces = re.compile(r"(?is)[ \t　]+")
+        result = spaces.sub(" ", result)
+        return result
+        
     def get_analysed_text(self, html):
         
         t_result = re.search(r"(?is)<title[^>]*>\s*(.*?)\s*</title\s*>",html)

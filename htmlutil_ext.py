@@ -32,6 +32,7 @@ class HTMLUtil(object):
         self.nss = [u'助動詞',u'助詞']
 
     def is_sentence(self, text):
+        u = unicode
         mecab = self.mecab
         res = mecab.parseToNode(text.encode('utf-8'))
         num_ss = 0
@@ -40,8 +41,8 @@ class HTMLUtil(object):
         num_jodou = 0
         num_all = 0
         while res:
-            surface = res.surface.decode()
-            feature = res.feature.decode()
+            surface = u(res.surface)
+            feature = u(res.feature)
             features = feature.split(',')
             if features[0] in self.ss and features[1] != u'非自立':
                 num_ss += 1

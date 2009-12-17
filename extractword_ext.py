@@ -13,9 +13,10 @@ class extractword(object):
         self.mecab = MeCab.Tagger('--userdic=%s --rcfile=%s' % (userdic,rcfile))
 
     def is_symbol_only(self,word):
+        u = unicode
         regexp = \
         re.compile(r'^[!"#\$\%\&\'\(\)\*\+,\-\./:;\<\=\>\?\@\[\\\]\^\_\`\{\}\~\|！＠＃＄％＾＆＊（）＿＝＋＼｜｀〜「」『』【】；：’”，＜．＞／？ 　©†‡¦»«®・]+$')
-        if regexp.search(word.decode()) != None:
+        if regexp.search(u(word)) != None:
             return True
         else:
             return False
@@ -41,14 +42,15 @@ class extractword(object):
             return False
 
     def extract_noun(self, text):
+        u = unicode
         worddic = {}
         result = []
         c = self.mecab
         res = c.parseToNode(text.encode("utf-8"))
         ignore = set([u'数',u'代名詞',u'非自立',u'記号',u'接頭',u'接尾'])
         while res:
-            surface = res.surface.decode().lower()
-            feature = res.feature.decode()
+            surface = u(res.surface).lower()
+            feature = u(res.feature)
             features = feature.split(',')
             if features[0] == u'名詞' \
             and features[1] not in ignore and not surface.isdigit()\
